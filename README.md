@@ -2,7 +2,7 @@
 
 
 ## Requirements
-
+* Python 3.x
 
 ## Run Guide
 
