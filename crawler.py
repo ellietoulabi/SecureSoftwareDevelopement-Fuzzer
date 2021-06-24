@@ -88,5 +88,5 @@ if __name__ == "__main__":
 
     init_url = "https://google.com/"
     not_visited.append(init_url)
-    # _crawling()
+    _crawling()
     forms = _parse_form_tags()
