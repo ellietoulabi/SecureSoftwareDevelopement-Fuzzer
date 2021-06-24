@@ -8,9 +8,9 @@ import csv
 logging.basicConfig(format="%(message)s", level=logging.INFO)
 
 
-visited = []  # visited urls
-not_visited = []  # urls found but still not visited
-banned_keywords = []  # keywords like logout
+visited = []                        # visited urls
+not_visited = []                    # urls found but still not visited
+banned_keyword = "logout"           # keywords like logout
 
 
 def _crawl(url):
@@ -20,7 +20,7 @@ def _crawl(url):
     soup = BeautifulSoup(html, "html.parser")
     for link in soup.find_all("a"):
         path = link.get("href")
-        if path:  # and path.startswith('/'):
+        if path and banned_keyword not in path:  # and path.startswith('/'):
             path = urljoin(url, path)
             linked.append(path)
     for u in linked:
@@ -40,7 +40,7 @@ def _crawling():
             logging.exception(f"Failed to crawl: {url}")
         finally:
             visited.append(url)
-            with open("urls.csv", "a") as file:
+            with open("urls.csv", "a+") as file:
                 file.write(f"{url}\n")
     print("Crawling Done. Results Saved in [urls.csv].")
 
@@ -51,15 +51,15 @@ def _parse_form_tags():
         urls = list(csv.reader(csvfile))
 
     form_data = {"data": []}
-    
+
     for url in urls:
         html = requests.get(url[0]).text
         soup = BeautifulSoup(html, "html.parser")
         for form in soup.find_all("form"):
-            
+
             form_dict = {}
             inputs_list = []
-            
+
             action = form.get("action")
             method = form.get("method")
             inputs = form.find_all("input")
@@ -68,7 +68,7 @@ def _parse_form_tags():
             form_dict["method"] = method
             form_dict["url"] = url
 
-            with open("form-details.csv", "a") as file:
+            with open("form-details.csv", "a+") as file:
                 file.write(f"{url},{method},{action},")
                 for _i in inputs:
                     stripped = str(_i).replace("\n", " ")
