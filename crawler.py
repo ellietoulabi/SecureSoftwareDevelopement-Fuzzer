@@ -4,6 +4,7 @@ from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
 import csv
+from fuzzers.XSS import XSS
 
 logging.basicConfig(format="%(message)s", level=logging.INFO)
 
@@ -86,7 +87,12 @@ def _parse_form_tags():
 
 if __name__ == "__main__":
 
-    init_url = "https://google.com/"
+    init_url = "https://mirsafaei.ir/test"
     not_visited.append(init_url)
     _crawling()
     forms = _parse_form_tags()
+
+    for form in forms['data']:
+        xss = XSS(form['inputs'], form['method'], form['url'][0])
+        xss.attack()
+    
