@@ -12,6 +12,7 @@ logging.basicConfig(format="%(message)s", level=logging.INFO)
 visited = []                        # visited urls
 not_visited = []                    # urls found but still not visited
 banned_keyword = "logout"           # keywords like logout
+cookie_dict= {"data":[]}                     # cookies
 
 
 def _crawl(url):
@@ -56,7 +57,6 @@ def _parse_form_tags():
     for url in urls:
         response = requests.get(url[0])
         html = response.text
-        cookies = response.cookies
         soup = BeautifulSoup(html, "html.parser")
         for form in soup.find_all("form"):
 
@@ -70,10 +70,9 @@ def _parse_form_tags():
             form_dict["action"] = action
             form_dict["method"] = method
             form_dict["url"] = url
-            form_dict["cookies"] = cookies
 
             with open("form-details.csv", "a+") as file:
-                file.write(f"{url},{method},{action},{cookies},")
+                file.write(f"{url},{method},{action},")
                 for _i in inputs:
                     stripped = str(_i).replace("\n", " ")
                     inputs_list.append(stripped)
@@ -87,6 +86,25 @@ def _parse_form_tags():
 
     return form_data
 
+def load_cookies ():
+    _cookie={}
+    try:
+        with open("cookies.csv","r", newline="\n") as csvfile:
+            cookies = list(csv.reader(csvfile))
+        
+        for cookie in cookies:
+            _cookie['URL']=cookie[0]
+            _cookie['KEY']=cookie[1]
+            _cookie['VALUE']=cookie[2]
+            cookie_dict['data'].append(_cookie)
+            
+        print(cookie_dict)
+            
+    except Exception:
+        print("[-] Error In Loading Cookies. File Not Found or Wrong Format!\n    Try: URL,KEY,VALUE\n")
+        
+
+
 
 if __name__ == "__main__":
 
@@ -94,8 +112,8 @@ if __name__ == "__main__":
     # init_url='https://mail.google.com/mail/u/0/#inbox'
     # not_visited.append(init_url)
     # _crawling()
-    forms = _parse_form_tags()
-
+    # forms = _parse_form_tags()
+    load_cookies()
     # for form in forms['data']:
     #     xss = XSS(form['inputs'], form['method'], form['url'][0])
     #     xss.attack()
