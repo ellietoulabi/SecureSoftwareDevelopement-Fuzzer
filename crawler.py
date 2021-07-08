@@ -54,7 +54,9 @@ def _parse_form_tags():
     form_data = {"data": []}
 
     for url in urls:
-        html = requests.get(url[0]).text
+        response = requests.get(url[0])
+        html = response.text
+        cookies = response.cookies
         soup = BeautifulSoup(html, "html.parser")
         for form in soup.find_all("form"):
 
@@ -68,9 +70,10 @@ def _parse_form_tags():
             form_dict["action"] = action
             form_dict["method"] = method
             form_dict["url"] = url
+            form_dict["cookies"] = cookies
 
             with open("form-details.csv", "a+") as file:
-                file.write(f"{url},{method},{action},")
+                file.write(f"{url},{method},{action},{cookies},")
                 for _i in inputs:
                     stripped = str(_i).replace("\n", " ")
                     inputs_list.append(stripped)
@@ -87,12 +90,13 @@ def _parse_form_tags():
 
 if __name__ == "__main__":
 
-    init_url = "https://mirsafaei.ir/test"
-    not_visited.append(init_url)
-    _crawling()
+    # init_url = "https://mirsafaei.ir/test"
+    # init_url='https://mail.google.com/mail/u/0/#inbox'
+    # not_visited.append(init_url)
+    # _crawling()
     forms = _parse_form_tags()
 
-    for form in forms['data']:
-        xss = XSS(form['inputs'], form['method'], form['url'][0])
-        xss.attack()
+    # for form in forms['data']:
+    #     xss = XSS(form['inputs'], form['method'], form['url'][0])
+    #     xss.attack()
     
