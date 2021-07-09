@@ -12,8 +12,8 @@
 
 ## Covered Vulnerabilities
 - [X] XSS
-- [X] CSRF
-- [ ] SQL Injection
+- [ ] CSRF
+- [X] SQL Injection
 
 
 ## Support
