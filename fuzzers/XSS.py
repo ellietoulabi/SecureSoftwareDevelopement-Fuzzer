@@ -10,7 +10,7 @@ class XSS(Fuzzer):
     def attack(self):
         for key in self.inputs:
             with open('./fuzzers/xsspayloads.txt', 'r') as payloads:
-                payload = payloads.readline()
+                payload = payloads.readline().strip()
 
                 # data = Dict[str, str]
                 data = self.inputs.copy()

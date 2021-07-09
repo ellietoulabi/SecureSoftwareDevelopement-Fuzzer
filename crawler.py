@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 from fuzzers.XSS import XSS
+from fuzzers.SQLI import SQLI
 
 logging.basicConfig(format="%(message)s", level=logging.INFO)
 
@@ -108,13 +109,17 @@ def load_cookies ():
 
 if __name__ == "__main__":
 
-    # init_url = "https://mirsafaei.ir/test"
+    init_url = "https://mirsafaei.ir/test"
+    # init_url = "https://mirsafaei.ir/search.php"
     # init_url='https://mail.google.com/mail/u/0/#inbox'
-    # not_visited.append(init_url)
-    # _crawling()
-    # forms = _parse_form_tags()
+    not_visited.append(init_url)
+    _crawling()
+    forms = _parse_form_tags()
     load_cookies()
-    # for form in forms['data']:
-    #     xss = XSS(form['inputs'], form['method'], form['url'][0])
-    #     xss.attack()
+    for form in forms['data']:
+        # xss = XSS(form['inputs'], form['method'], form['url'][0])
+        # xss.attack()
+
+        sqli = SQLI(form['inputs'], form['method'], form['url'][0])
+        sqli.attack()
     
