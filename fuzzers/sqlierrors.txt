@@ -1,4 +1,4 @@
-you have an error in your sql syntax;
+You have an error in your SQL syntax;
 warning: mysql
 unclosed quotation mark after the character string
 quoted string not properly terminated

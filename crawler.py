@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 import csv
 from fuzzers.XSS import XSS
 from fuzzers.SQLI import SQLI
-from utils import colored
+from utils import colored, parse_cookies
 
 logging.basicConfig(format="%(message)s", level=logging.INFO)
 
@@ -16,15 +16,13 @@ logging.basicConfig(format="%(message)s", level=logging.INFO)
 visited = []                        # visited urls
 not_visited = []                    # urls found but still not visited
 banned_keyword = "logout"           # keywords like logout
-cookie_dict= {"data":[]}            # cookies
+cookie_dict = {"data": []}            # cookies
 
 
-def _crawl(url,init_domain):
-    
-   
+def _crawl(url, init_domain):
 
     linked = []
-    html = requests.get(url).text
+    html = requests.get(url, cookies=parse_cookies(cookie_dict)).text
     soup = BeautifulSoup(html, "html.parser")
     for link in soup.find_all("a"):
         path = link.get("href")
@@ -38,13 +36,12 @@ def _crawl(url,init_domain):
         if domain in init_domain:
             if u not in visited and u not in not_visited:
                 not_visited.append(u)
-                
 
 
 def _crawling(init_url):
-    
+
     not_visited.append(init_url)
-    
+
     init_domain = urlparse(init_url).netloc
     # list = tldextract.extract(init_url)
     # init_domain = list.domain + '.' + list.suffix   # allows visiting subdomains
@@ -53,8 +50,8 @@ def _crawling(init_url):
     while not_visited:
         url = not_visited.pop(0)
         logging.info(f"Crawling: {url}")
-        try:  
-                _crawl(url,init_domain)
+        try:
+            _crawl(url, init_domain)
         except Exception:
             logging.exception(f"Failed to crawl: {url}")
         finally:
@@ -72,7 +69,7 @@ def _parse_form_tags():
     form_data = {"data": []}
 
     for url in urls:
-        response = requests.get(url[0])
+        response = requests.get(url[0], cookies=parse_cookies(cookie_dict))
         html = response.text
         soup = BeautifulSoup(html, "html.parser")
         for form in soup.find_all("form"):
@@ -103,44 +100,43 @@ def _parse_form_tags():
 
     return form_data
 
-def load_cookies ():
-    _cookie={}
+
+def load_cookies():
+    _cookie = {}
     try:
-        with open("cookies.csv","r", newline="\n") as csvfile:
+        with open("cookies.csv", "r", newline="\n") as csvfile:
             cookies = list(csv.reader(csvfile))
-        
+
         for cookie in cookies:
-            _cookie={}
-            _cookie['URL']=cookie[0]
-            _cookie['KEY']=cookie[1]
-            _cookie['VALUE']=cookie[2]
+            _cookie = {}
+            _cookie['URL'] = cookie[0]
+            _cookie['KEY'] = cookie[1]
+            _cookie['VALUE'] = cookie[2]
             cookie_dict['data'].append(_cookie)
-            
-        print(cookie_dict)
-            
+
     except Exception:
         print("[-] Error In Loading Cookies. File Not Found or Wrong Format!\n    Try: URL,KEY,VALUE\n")
-        
-
 
 
 if __name__ == "__main__":
 
     init_url = "https://mirsafaei.ir/test"
-    # init_url='https://mail.google.com/mail/u/0/#inbox'
-  
+    # init_url = "http://192.168.43.200/bWAPP/sqli_1.php"
+    # init_url = "http://192.168.43.200/bWAPP/sqli_6.php"
+    # init_url = "http://192.168.43.200/bWAPP/sqli_15.php"
+
+    load_cookies()
     _crawling(init_url)
     forms = _parse_form_tags()
-    load_cookies()
 
-    
-    # print(colored(255,0,0,"[?] Testing for potential XSS vulneribility..."))
-    # for form in forms['data']:
-    #     xss = XSS(form['inputs'], form['method'], form['url'][0])
-    #     xss.attack()
-    
-    print(colored(255,0,0,"\n[?] Testing for potential SQL Injection vulneribility..."))
+    print(colored(255, 0, 0, "[?] Testing for potential XSS vulneribility..."))
     for form in forms['data']:
-        sqli = SQLI(form['inputs'], form['method'], form['url'][0], cookie_dict)
+        xss = XSS(form['inputs'], form['method'], form['url'][0])
+        xss.attack()
+
+    print(colored(
+        255, 0, 0, "\n[?] Testing for potential SQL Injection vulneribility..."))
+    for form in forms['data']:
+        sqli = SQLI(form['inputs'], form['method'],
+                    form['url'][0], cookie_dict)
         sqli.attack()
-    
