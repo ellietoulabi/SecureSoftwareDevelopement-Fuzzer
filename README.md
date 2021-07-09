@@ -1,5 +1,5 @@
 # SecureSoftwareDevelopement-Fuzzer
-
+ A  fuzzer written in python used for exploratory testing for finding vulnerabilities in a web application by scanning its attack surface.
 
 ## Requirements
 * Python 3.x
