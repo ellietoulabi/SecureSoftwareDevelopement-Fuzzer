@@ -124,8 +124,8 @@ def load_cookies ():
 
 if __name__ == "__main__":
 
-    # init_url = "https://mirsafaei.ir/test"
-    init_url='https://mail.google.com/mail/u/0/#inbox'
+    init_url = "https://mirsafaei.ir/test"
+    # init_url='https://mail.google.com/mail/u/0/#inbox'
   
     _crawling(init_url)
     forms = _parse_form_tags()
