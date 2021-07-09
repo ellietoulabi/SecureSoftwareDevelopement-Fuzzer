@@ -4,17 +4,26 @@ import re
 class Fuzzer:
 
     inputs = dict()
+    cookies = dict()
     method = str()
     url = str()
     submit_name = str('')
     submit_value = str('')
 
 
-    def __init__(self, inputs, method, url):
+    def __init__(self, inputs, method, url, cookeis):
         self.inputs = self.extract_inputs(inputs)
         self.method = method
         self.url = url
-    
+        self.cookies = self.extract_cookies(cookeis)
+
+    def extract_cookies(self, cookies):
+        out_cookies = dict()
+        print(cookies['data'])
+        for cookie in cookies['data']:
+            print(cookie)
+            out_cookies[cookie['KEY']] = cookie['VALUE']
+        return out_cookies
 
     def extract_inputs(self, inputs):
         

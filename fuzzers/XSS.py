@@ -5,8 +5,8 @@ from utils import colored
 
 class XSS(Fuzzer):
 
-    def __init__(self, inputs, method, url):
-        super(XSS, self).__init__(inputs, method, url)
+    def __init__(self, inputs, method, url, cookies):
+        super(XSS, self).__init__(inputs, method, url, cookies)
     
     def attack(self):
         for key in self.inputs:
@@ -23,9 +23,9 @@ class XSS(Fuzzer):
                     data[key] = payload
 
                     if self.method == "get":
-                        result = requests.get(self.url, data)
+                        result = requests.get(self.url, data, cookies=self.cookies)
                     else:
-                        result = requests.post(self.url, data)
+                        result = requests.post(self.url, data, cookies=self.cookies)
                         
                     content = result.text
                     if payload in content:

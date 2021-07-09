@@ -4,3 +4,4 @@ fuzzers/__pycache__/*
 fuzzers/__pycache__/
 fuzzers/__pycache__
 cookies.csv
+*.cpython-37.pyc

@@ -5,8 +5,8 @@ import requests
 
 class SQLI(Fuzzer):
 
-    def __init__(self, inputs, method, url):
-        super(SQLI, self).__init__(inputs, method, url)
+    def __init__(self, inputs, method, url, cookies):
+        super(SQLI, self).__init__(inputs, method, url, cookies)
     
     def attack(self):
         errors = []
@@ -34,9 +34,9 @@ class SQLI(Fuzzer):
                 data[key] = payload
 
                 if self.method == "get":
-                    result = requests.get(self.url, data)
+                    result = requests.get(self.url, data, cookies=self.cookies)
                 else:
-                    result = requests.post(self.url, data)
+                    result = requests.post(self.url, data, cookies=self.cookies)
                 
                 content = result.text
                 for err in errors:
@@ -49,9 +49,9 @@ class SQLI(Fuzzer):
                 data[key] = payload
 
                 if self.method == "get":
-                    result = requests.get(self.url, data)
+                    result = requests.get(self.url, data, cookies=self.cookies)
                 else:
-                    result = requests.post(self.url, data)
+                    result = requests.post(self.url, data, cookies=self.cookies)
                 
                 duration = result.elapsed.total_seconds()
                 if duration >= 3:

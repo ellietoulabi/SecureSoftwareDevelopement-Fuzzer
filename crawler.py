@@ -110,6 +110,7 @@ def load_cookies ():
             cookies = list(csv.reader(csvfile))
         
         for cookie in cookies:
+            _cookie={}
             _cookie['URL']=cookie[0]
             _cookie['KEY']=cookie[1]
             _cookie['VALUE']=cookie[2]
@@ -140,6 +141,6 @@ if __name__ == "__main__":
     
     print(colored(255,0,0,"\n[?] Testing for potential SQL Injection vulneribility..."))
     for form in forms['data']:
-        sqli = SQLI(form['inputs'], form['method'], form['url'][0])
+        sqli = SQLI(form['inputs'], form['method'], form['url'][0], cookie_dict)
         sqli.attack()
     
