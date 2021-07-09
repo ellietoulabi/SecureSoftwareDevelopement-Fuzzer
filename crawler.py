@@ -120,7 +120,7 @@ def load_cookies():
 
 if __name__ == "__main__":
 
-    init_url = "https://mirsafaei.ir/test"
+    
     # init_url = "http://192.168.43.200/bWAPP/sqli_1.php"
     # init_url = "http://192.168.43.200/bWAPP/sqli_6.php"
     # init_url = "http://192.168.43.200/bWAPP/sqli_15.php"
