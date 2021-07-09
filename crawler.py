@@ -1,6 +1,8 @@
 #     links = soup.find_all('a')#, {'href': re.compile(rf".*{domain}*\/.*")})
 import logging
 from urllib.parse import urljoin
+from urllib.parse import urlparse
+import tldextract
 import requests
 from bs4 import BeautifulSoup
 import csv
@@ -13,10 +15,12 @@ logging.basicConfig(format="%(message)s", level=logging.INFO)
 visited = []                        # visited urls
 not_visited = []                    # urls found but still not visited
 banned_keyword = "logout"           # keywords like logout
-cookie_dict= {"data":[]}                     # cookies
+cookie_dict= {"data":[]}            # cookies
 
 
-def _crawl(url):
+def _crawl(url,init_domain):
+    
+   
 
     linked = []
     html = requests.get(url).text
@@ -27,18 +31,29 @@ def _crawl(url):
             path = urljoin(url, path)
             linked.append(path)
     for u in linked:
-        if u not in visited and u not in not_visited:
-            not_visited.append(u)
+        # domain = urlparse(url).netloc             # doesn't allow visiting subdomains
+        list = tldextract.extract(u)
+        domain = list.domain + '.' + list.suffix   # allows visiting subdomains
+        if domain in init_domain:
+            if u not in visited and u not in not_visited:
+                not_visited.append(u)
+                
 
 
-def _crawling():
-
+def _crawling(init_url):
+    
+    not_visited.append(init_url)
+    
+    init_domain = urlparse(init_url).netloc
+    # list = tldextract.extract(init_url)
+    # init_domain = list.domain + '.' + list.suffix   # allows visiting subdomains
+    print(f"[+] Initial Domain : {init_domain}")
     print("[+] Crawling Started...\n")
     while not_visited:
         url = not_visited.pop(0)
         logging.info(f"Crawling: {url}")
-        try:
-            _crawl(url)
+        try:  
+                _crawl(url,init_domain)
         except Exception:
             logging.exception(f"Failed to crawl: {url}")
         finally:
@@ -109,17 +124,13 @@ def load_cookies ():
 
 if __name__ == "__main__":
 
-    init_url = "https://mirsafaei.ir/test"
-    # init_url = "https://mirsafaei.ir/search.php"
-    # init_url='https://mail.google.com/mail/u/0/#inbox'
-    not_visited.append(init_url)
-    _crawling()
+    # init_url = "https://mirsafaei.ir/test"
+    init_url='https://mail.google.com/mail/u/0/#inbox'
+  
+    _crawling(init_url)
     forms = _parse_form_tags()
     load_cookies()
     for form in forms['data']:
-        # xss = XSS(form['inputs'], form['method'], form['url'][0])
-        # xss.attack()
-
-        sqli = SQLI(form['inputs'], form['method'], form['url'][0])
-        sqli.attack()
+        xss = XSS(form['inputs'], form['method'], form['url'][0])
+        xss.attack()
     
