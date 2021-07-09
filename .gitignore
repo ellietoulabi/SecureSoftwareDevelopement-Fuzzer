@@ -1,3 +1,5 @@
 form-details.csv
 urls.csv
+fuzzers/__pycache__/*
 fuzzers/__pycache__/
+fuzzers/__pycache__
