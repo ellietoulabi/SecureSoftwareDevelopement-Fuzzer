@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 import csv
 from fuzzers.XSS import XSS
 from fuzzers.SQLI import SQLI
+from utils import colored
 
 logging.basicConfig(format="%(message)s", level=logging.INFO)
 
@@ -130,7 +131,15 @@ if __name__ == "__main__":
     _crawling(init_url)
     forms = _parse_form_tags()
     load_cookies()
+
+    
+    # print(colored(255,0,0,"[?] Testing for potential XSS vulneribility..."))
+    # for form in forms['data']:
+    #     xss = XSS(form['inputs'], form['method'], form['url'][0])
+    #     xss.attack()
+    
+    print(colored(255,0,0,"\n[?] Testing for potential SQL Injection vulneribility..."))
     for form in forms['data']:
-        xss = XSS(form['inputs'], form['method'], form['url'][0])
-        xss.attack()
+        sqli = SQLI(form['inputs'], form['method'], form['url'][0])
+        sqli.attack()
     

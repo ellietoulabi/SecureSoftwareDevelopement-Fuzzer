@@ -3,3 +3,4 @@ urls.csv
 fuzzers/__pycache__/*
 fuzzers/__pycache__/
 fuzzers/__pycache__
+cookies.csv

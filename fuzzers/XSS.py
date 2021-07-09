@@ -1,5 +1,6 @@
 from fuzzers.Fuzzer import Fuzzer
 import requests
+from utils import colored
 
 
 class XSS(Fuzzer):
@@ -28,6 +29,6 @@ class XSS(Fuzzer):
                         
                     content = result.text
                     if payload in content:
-                        print(f"[+] Potential xss vulneribility, payload: {payload}, url: {self.url}")
+                        print(colored(0,255,0 ,f"\t[+] Potential xss vulneribility, payload: {payload}, url: {self.url}"))
                         break
-                    payload = payloads.readline()
+                    payload = payloads.readline().strip()
