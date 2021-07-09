@@ -4,21 +4,23 @@
 ## Requirements
 * Python 3.x
 * bs4: `pip install bs4`
-* Numpy: `pip3 install numpy`
-* 
+* Numpy: `pip install numpy`
+* tldextract: `pip install tldextract`
 
 ## Run Guide
-
+`python crawler.py`
 
 ## Covered Vulnerabilities
-- [ ] XSS
-- [ ] CSRF
-- [ ] ...
+- [X] XSS
+- [X] CSRF
+- [ ] SQL Injection
+
 
 ## Support
 
-**Reach out to us at:**
+**You can find us at:**
 * [elitoulabin@gmail.com](elitoulabin@gmail.com)
+* [MohammadMirsafaei](https://github.com/MohammadMirsafaei)
 
 
 
