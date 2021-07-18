@@ -15,12 +15,3 @@
 - [ ] CSRF
 - [X] SQL Injection
 
-
-## Support
-
-**You can find us at:**
-* [elitoulabin@gmail.com](elitoulabin@gmail.com)
-* [MohammadMirsafaei](https://github.com/MohammadMirsafaei)
-
-
-
